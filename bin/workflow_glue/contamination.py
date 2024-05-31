@@ -90,8 +90,12 @@ def main(args):
 
     df_contam_class = pd.DataFrame(df_bam['contam_class'].value_counts())
     df_contam_class = df_contam_class.rename(columns={'count': 'Number of alignments'})
-    df_contam_class['Percentage of alignments'] = (
+
+    if len(df_bam) > 0:
+        df_contam_class['Percentage of alignments'] = (
             100 / len(df_bam) * df_contam_class['Number of alignments']).round(2).T
+    else:
+        df_contam_class['Percentage of alignments'] = 0
     df_contam_class.index.name = 'Reference'
     df_contam_class.loc['Unmapped'] = [unmapped, unmapped_pct]
     df_contam_class.loc['Mapped'] = [mapped, mapped_pct]
