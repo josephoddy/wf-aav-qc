@@ -151,9 +151,9 @@ def main(args):
             # TODO fix this. Do we need o concat stats?
             fastcat.SeqSummary(args.stats[0])
 
-    plot_contamination(
-        report,
-        args.contam_class_counts)
+    #plot_contamination(
+     #   report,
+      #  args.contam_class_counts)
     plot_trucations(report, args.truncations)
     plot_itr_coverage(report, args.itr_coverage)
     plot_aav_structures(report, args.aav_structures)
