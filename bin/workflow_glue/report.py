@@ -84,70 +84,7 @@ def plot_itr_coverage(report, coverage_file):
                             EZChart(plt, theme='epi2melabs', height='300px')
 
 
-def plot_contamination(report=None, class_counts=None):
-    """Make report section with contamination plots.
-
-    Two plots: (1) mapped/unmapped; (2) mapped reads per reference
-    """
-    if class_counts is not None:
-        df_class_counts = pd.read_csv(
-            class_counts,
-            sep='\t',
-            dtype={
-                'Reference': str,
-                'Number of alignments': np.uint32,
-                'Percentage of alignments': np.float32,
-                'sample_id': str
-            }
-        )
-    else:
-        # Create an empty DataFrame with the required columns if class_counts is None
-        df_class_counts = pd.DataFrame(columns=[
-            'Reference', 'Number of alignments', 'Percentage of alignments', 'sample_id'
-        ])
-
-    if report is None:
-        # Create a default report if report is None
-        report = Report()
-
-    with report.add_section("Contamination", "Contamination"):
-        p(
-            "These two plots show mapping summaries that can highlight "
-            "potential contamination issues."
-        )
-        p(
-            "The first plot shows the percentage of reads that either map to any "
-            "combined reference sequence or are unmapped."
-        )
-        p(
-            "The second plot breaks down the alignment numbers into the "
-            "specific references (host, helper plasmid, Rep-Cap plasmid, and transgene "
-            "plasmid)."
-        )
-
-        if not df_class_counts.empty:
-            tabs = Tabs()
-            with tabs.add_dropdown_menu():
-                for sample, df_sample in df_class_counts.groupby('sample_id'):
-                    with tabs.add_dropdown_tab(sample):
-                        with Grid(columns=2):
-                            df_reads = df_sample[
-                                df_sample.Reference.isin(['Mapped', 'Unmapped'])]
-                            df_reads = df_reads.rename(columns={
-                                'Percentage of alignments': 'Percentage of Reads'})
-                            plt = ezc.barplot(
-                                df_reads[['Reference', 'Percentage of Reads']])
-                            plt.title = dict(text='Reads mapped/unmapped')
-                            EZChart(plt, theme='epi2melabs', height='400px')
-
-                            df_alns = df_sample[
-                                ~df_sample.Reference.isin(['Mapped', 'Unmapped'])]
-                            plt = ezc.barplot(
-                                df_alns[['Reference', 'Percentage of alignments']])
-                            plt.title = dict(text='Alignment counts per target')
-                            EZChart(plt, theme='epi2melabs', height='400px')
-        else:
-            p("No data available to generate plots.")
+# this was the site of plot_contamination
 
 def plot_aav_structures(report, structures_file):
     """Make report section barplots detailing the AAV structures found."""
